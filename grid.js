@@ -71,7 +71,6 @@ Grid.prototype.init = function() {
       if(origX === e.layerX) {
           if(self.enableDraw) {
               var cell = self.getAbsoluteCellFromPosition(e.layerX, e.layerY);
-              console.log(cell);
               self.toggleCell(cell);
               changed = true;
           }

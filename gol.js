@@ -24,7 +24,7 @@ Gol.prototype.setState = function(cells, generation) {
 }
 
 Gol.prototype.turn = function() {
-    console.log(++this.generation);
+    ++this.generation;
     var processed = {}, nalive = [], ndead = [], alive = 0;
 
     for(var x in this.alive) {
