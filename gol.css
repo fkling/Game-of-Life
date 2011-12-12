@@ -1,0 +1,191 @@
+html, body {
+    padding: 0;
+    margin: 0;
+    overflow:hidden;
+    font-family: 'Cagliostro', sans-serif;
+    height: 100%;
+    width; 100%;
+}
+
+#main {
+    position: relative;
+}
+
+
+canvas {
+    position: relative;
+    cursor: pointer;
+    box-shadow: 0px 5px 25px #111;
+    z-index: 10;
+    background-color: white;
+}
+
+
+#stats {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 500;
+    background-color: rgba(255, 255, 255, 0.7);
+    padding: 5px;
+    border: 1px solid #888;
+    border-bottom-right-radius: 5px;
+}
+
+#config {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: url('icons/bg2.jpg');
+    background-position: 0px -85px;
+    padding: 20px;
+    height: 100px;
+    box-shadow: inset 0px 0px 10px #111;
+}
+
+.col {
+    float: left;
+    padding: 10px;
+    border-right: 1px solid #888;
+}
+
+ .col:last-child {
+    border: none;    
+}
+
+
+.center {
+    position: absolute;
+}
+
+#menu {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    margin-left: 10px;
+    margin-bottom: 20px;
+    z-index: 100;
+}
+
+#menu .button {
+    display: inline-block;
+    width: 45px;
+    height: 45px;
+    background-color: rgba(0,0,0,0.7);
+    margin: 5px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+#run_button {
+    background: url('icons/controls_play_32.png') no-repeat center center;
+}
+
+body.running #run_button {
+    background-image: url('icons/controls_pause_32.png');
+}
+
+#config_button {
+    background: url('icons/settings_32.png') no-repeat center center;
+}
+
+#center_button {
+    background: url('icons/target_32.png') no-repeat center center;
+}
+
+#erase_button {
+    background: url('icons/trash_32.png') no-repeat center center;
+}
+
+#save_button {
+    background: url('icons/floppy_disk_32.png') no-repeat center center;
+}
+
+#list_button {
+    background: url('icons/folder_text_32.png') no-repeat center center;
+}
+
+#info_button {
+    background: url('icons/information_32.png') no-repeat center center;
+}
+
+body.running .hide_on_run {
+    display: none !important;
+}
+
+body.wrap_around #center_button {
+    display: none;
+}
+
+#save_dialog textarea, #save_dialog input  {
+    width: 100%;
+    font-size: 0.9em;
+    display: table-cell;
+}
+
+#save_dialog .col {
+    width: 350px;
+}
+
+#save_dialog img {
+    border: 2px solid #333;
+}
+
+
+#info_dialog {
+    font-size: 0.9em;
+}
+
+#info_dialog a {
+    color: #A31720;
+}
+
+#games_dialog .img {
+    float: right;
+    position: relative;
+    width: 200px;
+    min-height: 100px;
+}
+#games_dialog img {
+    position: absolute;
+    top:0;
+    right: 0;
+    border: 2px solid #333;
+}
+
+#games_dialog .buttons {
+    clear: both;
+}
+
+#games_dialog .game {
+    padding: 10px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #888;
+}
+
+#games_dialog .game:last-child {
+    border-bottom: none;
+}
+
+#games_dialog .current_img {
+    display: none;
+}
+
+/* jQuery UI dialog */
+
+.ui-widget {
+    font-family: inherit;
+}
+
+.ui-dialog {
+    box-shadow: 0px 5px 20px #888;
+}
+
+.ui-dialog-titlebar {
+    display: none;
+}
+
+.ui-button-text {
+    font-size: 0.8em;
+}

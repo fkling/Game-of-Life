@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Game of Life</title>
+        <link href='http://fonts.googleapis.com/css?family=Cagliostro' rel='stylesheet' type='text/css'>
+        <link href='lib/jquery-ui.css' rel='stylesheet' type='text/css'>
+        <link href='gol.css' rel='stylesheet' type='text/css'>
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
+        <script src="grid.js"></script>
+        <script src="gol.js"></script>
+        <script src="ui.js"></script>
+    </head>
+    <body>
+        <div id="stats"></div>
+        <div id="config">
+            <div class="col">
+                <label><input type="checkbox" id="wrap_around" /> Wrap around </label><br>
+                <label><input type="range" min="1" max="100" value="10" id="tps" /> Turns per second: </label><span id="tps_display"></span><br />
+                <label><input type="range" min="1" max="100" value="10" id="cell_size" /> Cell size: </label><span id="cs_display"></span>
+            </div>
+            <div class="col">
+                <label><input type="checkbox" id="show_stats" /> Show statistics </label><br>
+            </div>
+        </div>
+
+        <div id="main">
+            <div id="menu">
+                <div id="run_button" class="button" title="Start game"></div>
+                <div id="config_button" class="button" title="Settings"></div>
+                <div id="center_button" class="button hide_on_run" title="Center canvas"></div>
+                <div id="erase_button" class="button hide_on_run" title="Clear canvas"></div>
+                <div id="save_button" class="button hide_on_run" title="Save game"></div>
+                <div id="list_button" class="button hide_on_run" title="List games"></div>
+                <div id="info_button" class="button hide_on_run" title="About"></div>
+            </div>
+
+            <canvas id="world"></canvas>
+        </div>
+
+        <div id="save_dialog">
+            <div class='col'>
+                <p>
+                Title<br>
+                <input type="text" class="title" />
+                </p>
+                <p>
+                Description<br>
+                <textarea rows="15" class="descr"></textarea>
+            </div>
+            <div class='col'>
+                <img class="init_img" width="350"/>
+                <img class="current_img" width="350"/>
+            </div>
+        </div>
+
+        <div id="games_dialog">
+
+        </div>
+
+        <div id="info_dialog">
+            <h3>What is the Game of Life?</h3>
+            <p>
+            Conway's Game of Life, a <a href="http://en.wikipedia.org/wiki/Cellular_automaton">cellular automaton</a>, is a zero-player game,
+            meaning that its evolution is determined by its initial state, requiring no further input. Read more about it on <a href="http://en.wikipedia.org/wiki/Conway%27s_Game_of_Life">Wikipedia</a>.
+            </p>
+
+            <h3>How do I play?</h3>
+            <p>
+            Initially, you start with an empty grid. You can toggle the state of each cell by clicking on it. A black cell is a living cell.
+            If you keep the ALT key pressed, you can toggle the state of several cells (instead of dragging the grid).
+            </p>
+            <p>
+            You can start (and pause) the game by either pressing space or the "Start game" button. In this state, the grid does not accept any input anymore.
+            The computer performs a series of turns, until you pause the game or no cell is alive anymore. Which cell dies or becomes alive is 
+            determined by the following rules:
+
+            <ul>
+                <li>Any live cell with fewer than two live neighbours dies, as if caused by under-population.</li>
+                <li>Any live cell with two or three live neighbours lives on to the next generation.</li>
+                <li>Any live cell with more than three live neighbours dies, as if by overcrowding.</li>
+                <li>Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.</li>
+            </ul>
+
+            <h3>What else do I have to know?</h3>
+            <p>
+            There are various settings whith which you can control the look and behaviour of the grid (see "Settings"). Initially, the grid is infinite (or as big as
+            computationally possible (max range of integers in JavaScript)). By selecting "Wrap around", the top and bottom, and left and right side
+            of the grid become connected. "Cell size" lets you control the size of the grid.
+            </p>
+            <p>
+            "Turns per second" determines how many turns are performed per second, i.e. how often the state of the cells is recomputed. You can always
+            see in the upper right corner how many turns (generaitons) have been performed.
+            </p>
+            <p>
+            Your last game and its state is always stored locally in your browser when you leave this page
+            </p>
+
+            <h3>That's great, but...</h3>
+            <p>
+            If you have problems, suggestions, comments or just want to say "hi", write me to felix.kling at Gmail.
+            </p>
+            <p>
+            Please don't complain if you are not using the latest verison of Firefox or Chrome.
+            </p>
+
+
+            <h3>Where can I find the source code?</h3>
+            <p>
+            The code is available on <a href="https://github.com/fkling/Game-of-Life">Github</a>.
+            </p>
+
+            <h3>Credits</h3>
+            <p>
+            This application makes use of:
+            <ul>
+                <li>jQuery: <a href="http://jquery.com/">http://jquery.com/</a></li>
+                <li>jQuery UI: <a href="http://jqueryui.com/">http://jqueryui.com/</a></li>
+                <li>The PICOL icon library: <a href="http://www.picol.org/icon_library.php">http://www.picol.org/icon_library.php</a></li>
+            </ul>
+            <div class="copyright">
+                &copy;2011 by  <a href="http://felix-kling.de/">Felix Kling</a>
+            </div>
+        </div>
+
+
+
+        <script>
+            ui.init();
+            ui.run();
+        </script>
+    </body>
+</html>
