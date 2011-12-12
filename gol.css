@@ -38,7 +38,7 @@ canvas {
     left: 0;
     right: 0;
     background: url('icons/bg2.jpg');
-    background-position: 0px -85px;
+    background-position: top left;
     padding: 20px;
     height: 100px;
     box-shadow: inset 0px 0px 10px #111;
