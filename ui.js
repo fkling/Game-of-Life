@@ -1,4 +1,16 @@
 var ui = (function() {
+
+   window.requestAnimFrame = (function(){
+      return  window.requestAnimationFrame       || 
+              window.webkitRequestAnimationFrame || 
+              window.mozRequestAnimationFrame    || 
+              window.oRequestAnimationFrame      || 
+              window.msRequestAnimationFrame     || 
+              function(/* function */ callback, /* DOMElement */ element){
+                window.setTimeout(callback, 1000 / 60);
+              };
+    })();
+
     var grid, gol, ds, show_stats = false, grid_changed = false, first_time = false, timer,
         store = {
             config: {
@@ -427,8 +439,8 @@ var ui = (function() {
              timer = setTimeout(function() {
                  $stats.html('#' + (gol && gol.generation || 0) + '<br>' + stats);
                  grid.draw();
-                 timer = setTimeout(arguments.callee, 33);
-             }, 33);
+                 timer = setTimeout(arguments.callee, 1000/33);
+             }, 1000/33);
          }
      }
 
