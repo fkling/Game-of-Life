@@ -16,8 +16,8 @@
         <div id="config">
             <div class="col">
                 <label><input type="checkbox" id="wrap_around" /> Wrap around </label><br>
-                <label><input type="range" min="1" max="100" value="10" id="tps" /> Turns per second: </label><span id="tps_display"></span><br />
-                <label><input type="range" min="1" max="100" value="10" id="cell_size" /> Cell size: </label><span id="cs_display"></span>
+                <label>Turns per second: <input type="number" min="1" max="100" value="10" id="tps" /></label><br />
+                <label>Cell size: <input type="number" min="1" max="100" value="10" id="cell_size" /></label>
             </div>
             <div class="col">
                 <label><input type="checkbox" id="show_stats" /> Show statistics </label><br>
@@ -35,7 +35,7 @@
                 <div id="info_button" class="button hide_on_run" title="About"></div>
             </div>
 
-            <canvas id="world"></canvas>
+            <div id="world" style="position:absolute; top: 0; left:0; right: 0; bottom:0;"></div>
         </div>
 
         <div id="save_dialog">

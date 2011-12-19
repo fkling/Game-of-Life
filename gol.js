@@ -60,9 +60,9 @@ Gol.prototype.turn = function() {
     this.grid.clear();
     for(var i = nalive.length; i--;) {
         var c = nalive[i];
-        this.grid.markCell(c);
         this.markAlive(c[0], c[1]);
     }
+    this.grid.setMarkedCells(this.alive);
     return alive;
 };
 

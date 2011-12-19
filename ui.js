@@ -11,7 +11,13 @@ var ui = (function() {
               };
     })();
 
-    var grid, gol, ds, show_stats = false, grid_changed = false, first_time = false, timer,
+    var grid, gol, ds,  timer, supports_localstorage,
+        show_stats = false, 
+        grid_changed = false, 
+        first_time = false,
+        stats = '', 
+        loadedGame = {}, 
+        newGame = true;
         store = {
             config: {
                 tps: 10,
@@ -21,14 +27,15 @@ var ui = (function() {
             },
             last: null,
             games: [],
-        }, stats = '', loadedGame = {}, newGame = true;
+        };
+        
+   var $canvas, $stats;
 
-    var $canvas, $stats;
 
     // init functions
 
     function init(config) {
-        $canvas =  $('canvas');
+        $canvas =  $('#world');
         $stats = $('#stats');
 
         initDataStorage();
@@ -39,6 +46,8 @@ var ui = (function() {
     }
 
      function initDataStorage() {
+        supports_localstorage = !!window.localStorage;
+
         function empty(){ return ''};
 
          if(window.localStorage) {
@@ -98,7 +107,6 @@ var ui = (function() {
              setupGame();
              gol.setInitialCells(store.last.initial_cells);
              gol.setState(store.last.state, store.last.generation);
-             grid.setMarkedCells(JSON.parse(JSON.stringify(store.last.state)));
          }
      }
 
@@ -113,10 +121,7 @@ var ui = (function() {
 
          // resize canvas and center elements
          $(window).resize(function() {
-             $canvas.prop({
-                 height: $(window).height(),
-                 width: $(window).width()
-             });
+             grid.recalculatePosition();
 
              $('.center').each(function() {
                  $(this).css({
@@ -155,7 +160,7 @@ var ui = (function() {
              }
          });
 
-         $('#save_button').click(function() {
+         $('#save_button').click(supports_localstorage ? function() {
              if(!gol || grid_changed) {
                  setupGame();
              }
@@ -165,6 +170,8 @@ var ui = (function() {
                 return
              }
              $('#save_dialog').dialog('open');            
+         } : function() {
+             alert('Your browser does not support localStorage. Please use the latest Firefox or Chrome version.');
          });
 
          $('#list_button').click(function() {
@@ -180,14 +187,12 @@ var ui = (function() {
 
 
          // Configuration element handlers
-         $('#tps').change(function() {
+         $('#tps').bind('change input', function() {
              if(gol) gol.tps = +this.value;
-             $('#tps_display').text(+this.value);
          }).change();
 
-         $('#cell_size').change(function() {
-             grid.cell_width = +this.value;
-             $('#cs_display').text(grid.cell_width);
+         $('#cell_size').bind('change input', function() {
+             grid.setCellSize(+this.value);
          }).change();
 
          $('#wrap_around').change(function() {
@@ -195,7 +200,7 @@ var ui = (function() {
                  grid.center();
              }
              $('body').toggleClass('wrap_around', this.checked);
-             grid.wrapAround = this.checked;
+             grid.setWrapAround(this.checked);
          }).change();
 
          $('#show_stats').change(function(e) {
@@ -367,12 +372,16 @@ var ui = (function() {
      // UI functions
      function showConfig() {
          $('body').addClass('config_open');
-         $canvas.animate({'margin-top': -140}, 'swing');
+         $('#main').animate({'bottom': '140px'}, {easing: 'swing', step: function() {
+             grid.recalculatePosition();              
+         }});
      }
 
      function hideConfig() {
          $('body').removeClass('config_open');
-         $canvas.animate({'margin-top': 0}, 'swing');
+         $('#main').animate({'bottom': 0}, {easing:'swing', step: function() {
+             grid.recalculatePosition();              
+         }});
      }
 
 
@@ -403,6 +412,7 @@ var ui = (function() {
          $('body').addClass('running');
          gol.start();
          grid.setEnableDraw(false);
+         grid.draw_marked_cells = true;
          $('#run_button').prop('title', 'Pause game');
      }
 
@@ -410,6 +420,7 @@ var ui = (function() {
          $('body').removeClass('running');
          gol.pause();
          grid.setEnableDraw(true);
+         grid.draw_marked_cells = false;
          $('#menu').show();
          $('#run_button').prop('title', 'Start game');
      }
@@ -423,7 +434,7 @@ var ui = (function() {
          setupGame();
          gol.setInitialCells(game.initial_cells);
          if(current) {
-             gol.setState(game.current_cells, game.generations);
+             gol.setState(game.current_cells, game.generation);
          }
          loadedGame = game;
          newGame = false;
@@ -452,9 +463,9 @@ var ui = (function() {
      // helper functions
      function getFullStats(e) {
          return ['OffsetX: ' + grid.offsetX + ' OffsetY: ' + grid.offsetY,
-             'PosX: ' + e.layerX + ' PosY: ' + e.layerY,
-             'DisplayCell: ' + grid.getCellFromPosition(e.layerX, e.layerY),
-             'AbsoluteCell: ' + grid.getAbsoluteCellFromPosition(e.layerX, e.layerY)].join('<br>');
+             'PosX: ' + e.clientX + ' PosY: ' + e.clientY,
+             'DisplayCell: ' + grid.getCellFromPosition(e.clientX, e.clientY),
+             'AbsoluteCell: ' + grid.getAbsoluteCellFromPosition(e.clientX, e.clientY)].join('<br>');
      }
 
      function getCellSize() {
@@ -496,21 +507,21 @@ var ui = (function() {
              ratio: 1
          };
 
-         tc.width = canvas.width / 2;
-         tc.height = canvas.height / 2;
-         result.ratio = canvas.width / canvas.height;
+         tc.width = grid.width / 2;
+         tc.height = grid.height / 2;
+         result.ratio = grid.width / grid.height;
 
-         var grid = new Grid(tc, getCellSize() / 2);
-         grid.init();
+         var tgrid = new Grid(tc, getCellSize() / 2);
+         tgrid.init();
 
-         var g = new Gol(grid, getTPS());
+         var g = new Gol(tgrid, getTPS());
          g.setInitialCells(initial);
 
-         grid.draw();
+         tgrid.draw(true);
          result.initial = tc.toDataURL();
 
          g.setState(current, g.generation);
-         grid.draw();
+         tgrid.draw(true);
          result.current = tc.toDataURL();
 
          return result;
